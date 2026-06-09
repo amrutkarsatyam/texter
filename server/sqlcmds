@@ -1,0 +1,36 @@
+-- 1. Create the Users table (Updated to remove the JSON column)
+CREATE TABLE users (
+    id CHAR(36) PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    pass CHAR(60) NOT NULL
+);
+
+-- 2. Create the Chats table
+CREATE TABLE chats (
+    chatid CHAR(36) PRIMARY KEY,
+    chatname VARCHAR(255),
+    admin CHAR(36),
+    FOREIGN KEY (admin) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- 3. Create the Junction Table to link Users and Chats (Many-to-Many)
+-- This replaces the "chats json" and "list of uuids" concepts
+CREATE TABLE chat_members (
+    chatid CHAR(36),
+    userid CHAR(36),
+    PRIMARY KEY (chatid, userid),
+    FOREIGN KEY (chatid) REFERENCES chats(chatid) ON DELETE CASCADE,
+    FOREIGN KEY (userid) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- 4. Create the Messages table
+-- This replaces the "list of messages" JSON concept
+CREATE TABLE messages (
+    messageid INT AUTO_INCREMENT PRIMARY KEY,
+    chatid CHAR(36),
+    userid CHAR(36),
+    message_text TEXT NOT NULL,
+    sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (chatid) REFERENCES chats(chatid) ON DELETE CASCADE,
+    FOREIGN KEY (userid) REFERENCES users(id) ON DELETE CASCADE
+);
