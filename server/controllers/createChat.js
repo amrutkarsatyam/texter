@@ -6,8 +6,14 @@ const createChat= async(req,res)=>{
         const userid=req.userid;
         const chatname=req.body.chatname;
         const chat_members=req.body.chat_members;
+        if(!chatname||!chat_members){
+            return res.status(401).json({
+                message:"Please provide a chat name and members"
+            })
+        }
         const chatid= v4();
         const [queryResponse]=await pool.query('insert into chats(chatid,chatname,admin) values (?,?,?)',[chatid,chatname,userid]);
+        await pool.query('insert into chat_members(chatid,userid) values(?,?)',[chatid,userid]);
         let members_count=chat_members.length;
         for (const member of chat_members) {
             try{
@@ -30,7 +36,10 @@ const createChat= async(req,res)=>{
         console.log(queryResponse);
         return res.status(201).json({
             message:'Chat Creation Successful',
-            chatid: chatid,
+            chatInfo: {
+                chatid:chatid,
+                chatname:chatname
+            },
             insertedMembers:members_count
         })
     }

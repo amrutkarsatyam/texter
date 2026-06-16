@@ -4,13 +4,20 @@ import {WebSocketServer} from 'ws'
 import apiRouter from './routes/apiRouter.js'
 import chatRouter from "./routes/chatRouter.js"
 import dotenv from 'dotenv'
+import cors from 'cors'
 
 dotenv.config();
 const app=express()
 const server=http.createServer(app);
 const wsServer=new WebSocketServer({server});
 
-app.use(express.json())
+app.use(cors({
+    origin:process.env.FRONTEND_URL,
+    credentials:true,
+    methods:['GET', 'POST']
+}));
+
+app.use(express.json());
 
 app.use('/api/auth',apiRouter);
 app.use('/api/chats',chatRouter);
@@ -22,7 +29,7 @@ app.use('/api',(req,res)=>{
             '/login',
             '/chats/chatlist/',
             '/chats/create',
-            '/chats/messages/',
+            '/chats/:id',
             '/chats/send'
         ]
     })

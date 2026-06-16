@@ -6,7 +6,7 @@ const sendMessage=async(req,res)=>{
         const chatid=req.body.chatid;
         const text=req.body.text;
         const timestamp=new Date();
-        if(!userid||!chatid||!text||!timestamp){
+        if(!userid||!chatid||!text.trim()||!timestamp){
             return res.status(400).json({
                 message:"Missing Required Fields"
             })

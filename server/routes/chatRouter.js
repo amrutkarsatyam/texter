@@ -11,6 +11,6 @@ chatRouter.post('/send',dataMiddleWare,sendMessage);
 chatRouter.post('/create',dataMiddleWare,createChat);
 
 chatRouter.get('/chatlist',dataMiddleWare,getChatList);
-chatRouter.get('/messages',dataMiddleWare,getMessages);
+chatRouter.get('/:id',dataMiddleWare,getMessages);
 
 export default chatRouter;
