@@ -53,7 +53,7 @@ const createChat = async (chatName,chatMembers) => {
             throw new Error("Request Failed");
         }
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
 
         return data;
     }
@@ -77,7 +77,7 @@ const loadChat = async (id) => {
         )
         if (!response.ok) {
             const text = await response.text();
-            console.log(text);
+            // console.log(text);
             throw new Error("Request Failed");
         }
         const data = await response.json();
@@ -106,11 +106,11 @@ const sendMessage = async (id, text) => {
     )
     if (!response.ok) {
         const text = await response.text();
-        console.log(text);
+        // console.log(text);
         throw new Error("Request Failed");
     }
     const data = await response.json();
-    console.log("sent message, \n",data);
+    // console.log("sent message, \n",data);
 }
 
 export { getChatsData, createChat, loadChat,sendMessage }

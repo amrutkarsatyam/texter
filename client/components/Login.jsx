@@ -1,65 +1,93 @@
-import { useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import { handleLogin } from "../functions/handleEntry";
+import { UserContext } from "../contexts/UserContext";
+import { WSContext } from "../contexts/WSContext";
+import { ChatContext } from "../contexts/ChatContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
+
+    const { userIdSetter, userEmailSetter } = useContext(UserContext);
+    const { wsRef } = useContext(WSContext);
+    const { setChats } = useContext(ChatContext);
+    const navigate = useNavigate();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    return (<>
+    return (
+        <div className="flex min-h-screen w-full flex-col items-center justify-center bg-[#FDFDFD] font-sans text-neutral-900 antialiased">
 
-        <h1
-            className="mx-auto block text-center my-20 text-3xl font-bold tracking-tight text-blue-900"
-        >
-            Login to start texting...
-        </h1>
-
-
-        <form onSubmit={
-            async (e) => {
-                e.preventDefault();
-                handleLogin(email, password);
-            }
-        }>
-            <label htmlFor="email"
-                className="block w-[480px] mx-auto text-blue-800 px-3 py-2 text-sm outline-none focus:border-blue-500"
-            >Email:
-            </label>
-            <input
-                id="email"
-                type="email"
-                className="block w-[480px] mx-auto rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500"
-                placeholder="name@org.mail.domain"
-                value={email}
-                onChange={(e) => {
-                    setEmail(e.target.value);
-                }}
-            />
-
-            <label htmlFor="password"
-                className="block w-[480px] mx-auto text-blue-800 text-500 px-3 py-2 text-sm outline-none focus:border-blue-500"
+            <h1
+                className="mb-8 text-center text-3xl font-bold tracking-tighter text-red-900"
             >
-                Password:
-            </label>
-            <input
-                id="password"
-                type="password"
-                className="block w-[480px] mx-auto rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => {
-                    setPassword(e.target.value);
-                }}
-            />
-
-            <button
-                className="block w-[480px] mx-auto rounded-md border border-gray-300 bg-blue-900 px-3 py-2 my-5 text-sm text-white    font-bold  outline-none"
-                type="submit"
-            >
-                Login
-            </button>
+                Login to start texting...
+            </h1>
 
 
-        </form>
-    </>);
+            <form
+                className="flex w-full max-w-sm flex-col space-y-5"
+                onSubmit={
+                    async (e) => {
+                        e.preventDefault();
+                        const userid = await handleLogin(email, password);
+
+                        if (userid !== "") {
+                            setChats([]);
+                            userEmailSetter(email);
+                            userIdSetter(userid);
+                            wsRef.current = new WebSocket('ws://localhost:3000');
+                            wsRef.current.onopen = () => {
+                                console.log('WS Server Connection Opened!')
+                                wsRef.current.send(JSON.stringify({
+                                    type: 'addUser',
+                                    userid: userid
+                                }));
+                            }
+                            navigate('/chats')
+                        }
+                    }
+                }>
+                <label htmlFor="email"
+                    className="mb-1 block text-sm font-bold text-neutral-600"
+                >Email:
+                </label>
+                <input
+                    id="email"
+                    type="email"
+                    className="w-full rounded-none border border-neutral-300 bg-white px-4 py-3 text-sm text-neutral-900 placeholder-neutral-400 transition-colors duration-200 focus:border-neutral-900 focus:outline-none focus:ring-0"
+                    placeholder="name@org.mail.domain"
+                    value={email}
+                    onChange={(e) => {
+                        setEmail(e.target.value);
+                    }}
+                />
+
+                <label htmlFor="password"
+                    className="mb-1 block text-sm font-bold text-neutral-600"
+                >
+                    Password:
+                </label>
+                <input
+                    id="password"
+                    type="password"
+                    className="w-full rounded-none border border-neutral-300 bg-white px-4 py-3 text-sm text-neutral-900 placeholder-neutral-400 transition-colors duration-200 focus:border-neutral-900 focus:outline-none focus:ring-0"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => {
+                        setPassword(e.target.value);
+                    }}
+                />
+
+                <button
+                    className="mt-2 w-full rounded-none bg-blue-900 px-4 py-4 text-sm font-bold text-white transition-all duration-200 hover:bg-neutral-800 focus:outline-none active:scale-[0.98]"
+                    type="submit"
+                >
+                    Login
+                </button>
+
+
+            </form>
+        </div>
+    );
 }

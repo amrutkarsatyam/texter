@@ -16,9 +16,9 @@ const sendMessage=async(req,res)=>{
             return res.status(403).json({
             message:"Unauthorized, User is not a member of the chat"
         })
-        console.log("auth",isUserInChat.length>0);
+        // console.log("auth",isUserInChat.length>0);
         const [postedMessage]=await pool.query('insert into messages (userid,chatid,text,time) values (?,?,?,?)',[userid,chatid,text,timestamp]);
-        console.log("sent",postedMessage)
+        // console.log("sent",postedMessage)
         if(postedMessage.affectedRows>0){
             return res.status(201).json({
                 message:"Message Sent!"

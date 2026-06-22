@@ -21,20 +21,23 @@ const handleLogin = async (email, password) => {
 
         if(!response.ok){
             const text=await response.text();
-            console.log("RES NOT OK ", text);
+            // console.log("RES NOT OK ", text);
             throw new Error("Req Failed");
         }
 
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
 
         if (data.token) {
             localStorage.setItem(TOKEN_KEY, data.token);
+            const userid=data.userid;
             console.log("token set to : " + localStorage.getItem(TOKEN_KEY))
+            return userid;
         }
+        return false;
     }
     catch (error) {
-        console.log(error.message)
+        console.log(error.message);
     }
 }
 
@@ -62,7 +65,7 @@ const handleRegister = async (email, password) => {
         }
 
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
 
         if (data.token) {
             localStorage.setItem(TOKEN_KEY, data.token);
@@ -70,7 +73,7 @@ const handleRegister = async (email, password) => {
         }
     }
     catch (error) {
-        console.log(error.message)
+        // console.log(error.message)
     }
 }
 

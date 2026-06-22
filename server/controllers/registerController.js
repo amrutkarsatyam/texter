@@ -9,7 +9,7 @@ const registerController= async (req,res)=>{
         if (!req.body) {
             return res.status(400).json({ message: "Request body is undefined" });
         }
-        console.log(req.body);
+        // console.log(req.body);
         const email=req.body.email;
         const password=req.body.password;
         if(!email||!password){

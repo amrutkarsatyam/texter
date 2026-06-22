@@ -18,7 +18,8 @@ const loginController= async(req,res)=>{
             const token=await jwt.sign({userid,email},process.env.JWT_SECRET);
             return res.status(200).json({
                 message:"Login Successful",
-                token:token
+                token:token,
+                userid:userid
             })
         }
         else return res.status(401).json({

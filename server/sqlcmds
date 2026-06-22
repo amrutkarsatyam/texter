@@ -1,6 +1,6 @@
 -- 1. Create the Users table (Updated to remove the JSON column)
 CREATE TABLE users (
-    id CHAR(36) PRIMARY KEY,
+    userid CHAR(36) PRIMARY KEY,
     email VARCHAR(255) UNIQUE NOT NULL,
     pass CHAR(60) NOT NULL
 );

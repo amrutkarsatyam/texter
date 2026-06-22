@@ -35,7 +35,7 @@ export function ChatProvider({ children }) {
     }
 
     return (
-        <ChatContext.Provider value={{chats, loadUserChats, createNewChat}}>
+        <ChatContext.Provider value={{chats, setChats,loadUserChats, createNewChat}}>
             {children}
         </ChatContext.Provider>
     )

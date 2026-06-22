@@ -5,7 +5,7 @@ const getChatList=async(req,res)=>{
         
         const userid=req.userid;
         const [queryResponse]=await pool.query('select chats.chatid,chats.chatname from chats join chat_members on chats.chatid=chat_members.chatid where chat_members.userid=(?)',[userid]);
-        console.log(queryResponse);
+        // console.log(queryResponse);
 
         return res.status(200).json({
             message:"Fetched List Of Chats",
