@@ -13,7 +13,7 @@ const getChatList=async(req,res)=>{
         })
     }
     catch(err){
-        res.status(500).status({
+        res.status(500).json({
             message:"Error in Fecthing Chats",
             error: err.code
         })
