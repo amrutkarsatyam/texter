@@ -4,6 +4,7 @@ import { UserContext } from "../contexts/UserContext";
 import { WSContext } from "../contexts/WSContext";
 import { ChatContext } from "../contexts/ChatContext";
 import { useNavigate } from "react-router-dom";
+const wsUrl = import.meta.env.VITE_WS_URL;
 
 export default function Login() {
 
@@ -36,7 +37,7 @@ export default function Login() {
                             setChats([]);
                             userEmailSetter(email);
                             userIdSetter(userid);
-                            wsRef.current = new WebSocket('ws://localhost:3000');
+                            wsRef.current = new WebSocket(wsUrl);
                             wsRef.current.onopen = () => {
                                 console.log('WS Server Connection Opened!')
                                 wsRef.current.send(JSON.stringify({
